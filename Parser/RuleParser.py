@@ -487,9 +487,13 @@ class Rule:
                 if k == "fast_pattern":
                     clast.fast_pattern = v
                     continue
-		  
+		
+		if k == "metadata":
+			continue
+
 		else:
 		  print "\nUnsupported keyword! Error parsing rule contents\n" +str(rule)
+			print str("KEYWORD ERR: " + k)
 		  return 1
 		  #break
 
