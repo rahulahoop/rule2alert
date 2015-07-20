@@ -389,6 +389,7 @@ class PayloadGenerator:
 			self.protocol = TCP()
 		else:
 			print "Protocol Not Supported"
+			print str("UNSUPPORTED PROTOCOL: " + self.proto)
 			self.notSupported = True
 			return 1
 			

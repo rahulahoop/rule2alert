@@ -63,11 +63,28 @@ class SnortConf:
 				self.vars[var] = data
 			elif line.startswith("portvar"):
 				#r = re.search("portvar\s+(?P<var>[A-Z]_+)\s+(?P<data>[\d\$\[\]\,]+)", line)
-				r = re.search("portvar\s+(?P<var>[A-Z_]+)\s+(?P<data>\[*[\d+\,*]+\]*)", line)
-				
+				hasEnv = False
+				if line.find('$') is not -1:
+					envVar = re.findall("\$(\w*)", line)
+					hasEnv = True
+					data = ''
+					for env in envVar:
+						if data == '':
+							data = self.vars[env]
+						else:
+							data = str(data[:-1]+ ',' + self.vars[env][1:])
+						line = line.replace(str('$' + env + ","), '')
+				else:
+					r = re.search("portvar\s+(?P<var>[A-Z_]+)\s+(?P<data>\[*[\d+\,*]+\]*)", line)
+
 				if not r: continue
-				var  = r.group("var")
-				data = r.group("data")
+				var  = re.search("portvar\s+(?P<var>[A-Z_]+)\s", line).group("var")
+				if not hasEnv:
+					data = r.group("data")
+				else:
+					newPorts = re.search("(?P<data>\[*[\d+\,*]+\]*)", line).group("data")
+					data = str(data[:-1]+ ',' + newPorts[1:])
+					print data
 				#print var, "PORTVARS"
 				#print data, "DATA for Ports"
 				if data[1:] in self.vars:
@@ -81,5 +98,4 @@ class SnortConf:
 
 				self.vars[var] = data
 
-	
 		return self.vars

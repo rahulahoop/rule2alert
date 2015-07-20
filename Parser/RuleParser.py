@@ -442,7 +442,7 @@ class Rule:
                 if k == "within":
                     clast.within = int(v)
                     continue
-                if k == "http_client body":
+                if k == "http_client_body":
                     clast.isHTTP = True
                     clast.http_client_body = v
                     continue
@@ -491,6 +491,8 @@ class Rule:
                 if k == "metadata":
                     continue
                 if k == "priority":
+                    continue
+                if k == "threshold":
                     continue
 
 		else:
