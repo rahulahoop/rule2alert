@@ -17,6 +17,7 @@ class HTTP:
 	def build(self):
 
 		#HTTP URI Normalization
+		#looks for particular packet content
 		if self.uri.find("|") != -1:
 			while self.uri.find("|") != -1:
 				m = re.search("\|([A-F0-9\s]+)\|", self.uri)
@@ -32,6 +33,10 @@ class HTTP:
 					values.append(val)
 
 				for v in values:
+					backslashByCd = 92
+					if list(bytearray(binascii.unhexlify(v.strip()))).pop() is backslashByCd:
+						payload = payload.replace(v.strip(), "\\")
+						continue
 					payload = re.sub(v.strip(), binascii.unhexlify(v.strip()), payload)
 					payload = re.sub(' ','',payload)
 
